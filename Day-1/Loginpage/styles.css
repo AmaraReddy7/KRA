@@ -1,0 +1,17 @@
+* {
+  text-align: center;
+}
+.uname {
+  color: aqua;
+  font-family: "Times New Roman", Times, serif;
+}
+.pword {
+  color: blue;
+}
+.login {
+  border-radius: 15px;
+  border-width: 5px;
+  color: Green;
+  padding: 9px;
+  cursor: pointer;
+}
