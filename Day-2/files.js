@@ -3,7 +3,7 @@ const file_name = example.txt;
 
 async function managefunctionoperations() {
   try {
-    //creating a file
+    //creating a file and writing a file
     console.log(`File Creation: ${file_name}`);
     const initialcontent = "Welcome to filesystem";
     await fs.writeFile(file_name, initialcommint, "utf8");
