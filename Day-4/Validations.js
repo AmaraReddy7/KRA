@@ -1,53 +1,86 @@
-const { body, validationResult } = require("express-validator");
+const express = require("express");
+const app = express();
 
-// validation rules as middleware
-const userValidationRules = [
-  body("firstname")
-    .trim()
-    .notEmpty()
-    .withMessage("First name is required.")
-    .matches(/^[a-zA-Z]+$/)
-    .withMessage("First name must be alphabets only."),
-  body("lastname")
-    .trim()
-    .notEmpty()
-    .withMessage("Last name is required.")
-    .matches(/^[a-zA-Z]+$/)
-    .withMessage("Last name must be alphabets only."),
-  body("email").isEmail().withMessage("Invalid email address."),
-  body("dob")
-    .isISO8601()
-    .toDate()
-    .withMessage("Invalid date format (YYYY-MM-DD)."),
-  body("gender")
-    .notEmpty()
-    .withmessage("Please describe your gender.")
-    .isin(["male", "female", "other", "notspecified"])
-    .withMessage("invalid gender must be in any of them male, female, other, notspecified"),
-  body("phoneNumber")
-    .isMobilePhone("any")
-    .withMessage("Invalid phone number format."),
-];
+app.use(express.json());
 
-//the validation results
-const validateHandler = (req, res, next) => {
-  const errors = validationResult(req);
-  if (errors.isEmpty()) {
-    return next();
+// Existing phone numbers (mock DB)
+const existingPhones = ["9876543210", "8765432109"];
+
+app.post("/create-patient", (req, res) => {
+  const { name, lname, email, dob, phone, gender } = req.body;
+
+  // ---------- Name ----------
+  if (!name || name.length < 4 || !/^[A-Za-z]+$/.test(name)) {
+    return res
+      .status(400)
+      .json({ message: "First name must be at least 4 alphabets" });
   }
-  // send 400 response
-  res.status(400).json({ errors: errors.array() });
-};
 
-module.exports{
-    userValidationRules, validateHandler
-}
+  // ---------- Last Name ----------
+  if (!lname || lname.length < 4 || !/^[A-Za-z]+$/.test(lname)) {
+    return res
+      .status(400)
+      .json({ message: "Last name must be at least 4 alphabets" });
+  }
 
-// Example Route with express-validator middleware chain
-app.post("/register", userValidationRules, validateHandler, (req, res) => {
-  const { firstname, lastname, email, dob, gender, phoneNumber } = req.body;
-  res.status(200).json({
-    message: "User data is valid and processed successfully",
-    userData: { firstname, lastname, email, dob, gender, phoneNumber },
+  // ---------- Email ----------
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.(com|in)$/;
+  if (!email || !emailRegex.test(email)) {
+    return res.status(400).json({ message: "Invalid email format" });
+  }
+
+  // ---------- DOB ----------
+  const dobDate = new Date(dob);
+  const today = new Date();
+
+  if (!dob || isNaN(dobDate.getTime())) {
+    return res.status(400).json({ message: "Invalid DOB format (YYYY-MM-DD)" });
+  }
+
+  if (dobDate > today) {
+    return res.status(400).json({ message: "DOB cannot be a future date" });
+  }
+
+  // ---------- Phone ----------
+  if (!/^[89][0-9]{9}$/.test(phone)) {
+    return res.status(400).json({
+      message: "Phone must be 10 digits and start with 8 or 9",
+    });
+  }
+
+  if (/^(\d)\1+$/.test(phone)) {
+    return res.status(400).json({
+      message: "Phone number should not have repeated digits",
+    });
+  }
+
+  if (existingPhones.includes(phone)) {
+    return res.status(400).json({
+      message: "Phone number already exists",
+    });
+  }
+
+  // ---------- Gender ----------
+  if (!["M", "F", "O"].includes(gender)) {
+    return res.status(400).json({
+      message: "Gender must be M, F or O",
+    });
+  }
+
+  // ---------- DTO ----------
+  const patientDTO = {
+    name,
+    lname,
+    email,
+    dob,
+    phone,
+    gender,
+  };
+
+  return res.status(201).json({
+    message: "Patient created successfully",
+    data: patientDTO,
   });
 });
+
+app.listen(3000, () => console.log("Server running on port 3000"));
