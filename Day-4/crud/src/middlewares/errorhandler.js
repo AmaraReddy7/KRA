@@ -6,3 +6,5 @@ const errorhandling = (err, req, res, next) => {
     error: err.message,
   });
 };
+
+export default errorhandling;

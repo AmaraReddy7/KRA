@@ -3,33 +3,33 @@ const app = express();
 
 app.use(express.json());
 
-// Existing phone numbers (mock DB)
+// Existing phone numbers
 const existingPhones = ["9876543210", "8765432109"];
 
 app.post("/create-patient", (req, res) => {
-  const { name, lname, email, dob, phone, gender } = req.body;
+  const { fname, lname, email, dob, phone, gender } = req.body;
 
-  // ---------- Name ----------
-  if (!name || name.length < 4 || !/^[A-Za-z]+$/.test(name)) {
+  //FirstName
+  if (!fname || fname.length < 4 || !/^[A-Za-z]+$/.test(fname)) {
     return res
       .status(400)
       .json({ message: "First name must be at least 4 alphabets" });
   }
 
-  // ---------- Last Name ----------
+  // Lastname
   if (!lname || lname.length < 4 || !/^[A-Za-z]+$/.test(lname)) {
     return res
       .status(400)
       .json({ message: "Last name must be at least 4 alphabets" });
   }
 
-  // ---------- Email ----------
+  //Email 
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.(com|in)$/;
   if (!email || !emailRegex.test(email)) {
     return res.status(400).json({ message: "Invalid email format" });
   }
 
-  // ---------- DOB ----------
+  //DOB 
   const dobDate = new Date(dob);
   const today = new Date();
 
@@ -41,7 +41,7 @@ app.post("/create-patient", (req, res) => {
     return res.status(400).json({ message: "DOB cannot be a future date" });
   }
 
-  // ---------- Phone ----------
+  // Phone 
   if (!/^[89][0-9]{9}$/.test(phone)) {
     return res.status(400).json({
       message: "Phone must be 10 digits and start with 8 or 9",
@@ -60,16 +60,16 @@ app.post("/create-patient", (req, res) => {
     });
   }
 
-  // ---------- Gender ----------
+  // Gender 
   if (!["M", "F", "O"].includes(gender)) {
     return res.status(400).json({
       message: "Gender must be M, F or O",
     });
   }
 
-  // ---------- DTO ----------
+  // DTO
   const patientDTO = {
-    name,
+    fname,
     lname,
     email,
     dob,
@@ -83,4 +83,4 @@ app.post("/create-patient", (req, res) => {
   });
 });
 
-app.listen(3000, () => console.log("Server running on port 3000"));
+app.listen(3000, () => console.log("Server running on port 5000"));

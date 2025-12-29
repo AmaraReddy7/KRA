@@ -10,15 +10,18 @@ app.get("/", (req, res, next) => {
   next();
 });
 
-app.get("/user", auth, (req, res) => {
+app.get("/user", auth, (req, res,next) => {
   console.log(`user is admin : ${req.admin}`);
   console.log("Users page");
   res.send("new user welcome");
+  next();
 });
 
 /*app.post("./user", (req, res) => {
   res.send("Helloword");
 });*/
+//Firstname
+
 
 function logger(req, res, next) {
   console.log("before");
