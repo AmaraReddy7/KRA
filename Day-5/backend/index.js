@@ -1,8 +1,10 @@
 const express = require("express");
 const app = express();
+const jwt = require("jsonwebtoken");
 const { users } = require("./data");
 const projectRouter = require("./routes/projects");
 const port = 5300;
+const SECRET_KEY = "123456";
 
 app.use(express.json());
 

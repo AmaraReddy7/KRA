@@ -1,9 +1,13 @@
 const express = require("express");
+
 const cors = require("cors");
+const jwt = require("jsonwebtoken");
 const authRoutes = require("./routes/authroutes");
+const dotenv = require("dotenv");
 const bodyparser = require("body-parser");
 const app = express();
 const port = 3232;
+const SECRET_KEY = "123456";
 
 app.use(cors());
 app.use(express.json());
