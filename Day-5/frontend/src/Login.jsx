@@ -14,16 +14,9 @@ function Login() {
      setEmail(e.target.value)
   }*/
 
-  /*const onSubmit = async (data) => {
-    console.log(body);
-    let r = await fetch("http://localhost:3232/login", {
-      method: "POST",
-      body: JSON.stringify(data),
-    });*/
+  //onclicking button sending
   const onSubmit = async (data) => {
-    console.log(data);
-
-    const r = await fetch("http://localhost:3232/login", {
+    const r = await fetch("http://localhost:3232/api/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -31,34 +24,22 @@ function Login() {
       body: JSON.stringify(data),
     });
 
-    const res = await r.text();
-    console.log(res);
-  };
+    const res = await r.json();
 
-  // console.log(r);
+    if (!r.ok) {
+      alert(res.message);
+      return;
+    }
 
-  /* let res = await r.text();
-    const userData = JSON.parse(localStorage.getItem(data.password));
-    if (userData) {
-      if (userData.password === "12345678") {
-        console.log(userData.email + "You are Successfully Loggedin");
-      } else {
-        console.log("Email or password is not matching");
-      }
+    if (res.role === "admin") {
+      //Admin dashboard
+      alert("Welcome Admin");
     } else {
-      console.log("Email or password is not matching with our record");
+      //user dashboard
+      alert("Welcome User");
     }
   };
-  /*
-  const delay = (d) => {
-    return new Promise(resolve, reject) => {
-      setTimeout(() => {
-        resolve()},d*1000);})}
-  const onSubmit = aync (data) => {
-    await delay(4);  //delaying 
-    console.log(data);
-    }
-  */
+
   return (
     <>
       {isSubmitting && <div>...Loading</div>}
