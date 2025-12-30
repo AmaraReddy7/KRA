@@ -3,14 +3,15 @@ const express = require("express");
 const cors = require("cors");
 const jwt = require("jsonwebtoken");
 const authRoutes = require("./routes/authroutes");
-const dotenv = require("dotenv");
+const dotenv = require("dotenv").config();
 const bodyparser = require("body-parser");
 const app = express();
 const port = 3232;
-const SECRET_KEY = "123456";
 
 app.use(cors());
+//middleware
 app.use(express.json());
+
 app.use(express.urlencoded({ extended: true }));
 app.use(bodyparser.json());
 
@@ -18,12 +19,12 @@ app.get("/", (req, res) => {
   res.send("Welcome to parker house");
 });
 
-/*app.post("/login", (req, res) => {
+app.post("/login", (req, res) => {
   console.log(req.body);
   // console.log(req.body.email, "email");
   // console.log("password", req.body.password);
   res.send("Welcome");
-});*/
+});
 app.use("/api", authRoutes);
 
 app.listen(port, () => {
