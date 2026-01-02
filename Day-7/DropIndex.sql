@@ -1,0 +1,1 @@
+DROP INDEX customer_lastname;

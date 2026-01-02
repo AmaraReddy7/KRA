@@ -1,11 +1,13 @@
 {
+  "scripts": {
+    "start": "node server.js"
+  },
   "dependencies": {
     "@types/jsonwebtoken": "^9.0.10",
     "body-parse": "^0.1.0",
     "body-parser": "^2.2.1",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
-    "express": "^5.2.1",
-    "jsonwebtoken": "^9.0.3"
+    "express": "^5.2.1"
   }
 }

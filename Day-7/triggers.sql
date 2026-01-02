@@ -84,6 +84,25 @@ salaries
 FOR EACH ROW
 EXECUTE PROCEDURE log_salary_change();
 
+/*Delete Triggers function*/
+
+CREATE OR REPLACE FUNCTION archeive_deleted_salary() 
+RETURNS TRIGGER
+AS 
+$$
+BEGIN 
+     INSERT INTO salaries_ch(e_id,old_salary,new_salary)
+	 VALUES(NEW.id,OLD.salary,NEW.salary);
+	   RETURN NEW;
+	   END;    
+$$ LANGUAGE plPgSQL;
+
+/*Delete trigger*/
+CREATE TRIGGER after_deleted_salary_trigger
+AFTER DELETE ON
+salaries
+FOR EACH ROW
+EXECUTE PROCEDURE archeive_deleted_salary();
 
 
 

@@ -20,18 +20,17 @@ const con = new Client({
 
 con.connect().then(() => console.log("Connected to psql successfully"));
 
-app.post("/postData", (req, res) => {
-  const { name, address, id } = req.body;
-  const insert_query =
-    "INSERT INTO users(name, address, id) VALUES ($1, $2, $3)";
-  con.query(insert_query, [name, address, id], (err, result) => {
-    if (err) {
-      res.send(err);
-    } else {
-      console.log(result);
-      res.send("POSTED DATA");
-    }
-  });
+app.post("/postData", async (req, res) => {
+  try {
+    const { name, address, id } = req.body;
+    const insert_query =
+      "INSERT INTO users(name, address, id) VALUES ($1, $2, $3)";
+    await con.query(insert_query, [name, address, id]);
+    res.status(201).send("POSTED DATA");
+  } catch (err) {
+    console.error(err);
+    res.status(500).send(err);
+  }
 });
 
 app.get("/fetchData", (req, res) => {
@@ -74,6 +73,9 @@ app.put("/update/:id", (req, res) => {
 
 app.delete("/delete/:id", async (req, res) => {
   try {
+    const id = req.params.id;
+    await con.query("DELETE FROM users WHERE id = $1", [id]);
+    res.send("Deleted successfully");
   } catch (error) {}
   const id = req?.params.id;
   const delete_query = "DELETE FROM USERS WHERE id = $1";
