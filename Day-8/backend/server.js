@@ -1,14 +1,17 @@
 const express = require("express");
 const dotenv = require("dotenv").config();
+const cors = require("cors");
 const db = require("./config/db");
 const app = express();
 const authRoutes = require("./routes/authroutes");
 const userRoutes = require("./routes/userroutes");
 
 //middlewares
+app.use(cors());
+
 app.use(express.json());
 
-app.get("/", async (req, res) => {
+/*app.get("/", async (req, res) => {
   try {
     const result = await db.query("SELECT * FROM users");
     res.send(
@@ -18,13 +21,13 @@ app.get("/", async (req, res) => {
     console.error(err);
     res.status(500).send(err);
   }
-});
+});*/
 
 //routes
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 
-const port = process.env.PORT || 3001;
+const port = process.env.PORT || 3000;
 
 app.listen(port, () => {
   console.log(`server is running on http://localhost:${port}`);

@@ -6,11 +6,11 @@ router.get("/admin", verifyToken, (req, res) => {
   res.json({ message: "Welcome admin" });
 });
 
-router.get("/manager", (req, res) => {
+router.get("/manager", verifyToken, (req, res) => {
   res.json({ message: "Welcome manager" });
 });
 
-router.get("/user", (req, res) => {
+router.get("/user", verifyToken, (req, res) => {
   res.json({ message: "Welcome user" });
 });
 
