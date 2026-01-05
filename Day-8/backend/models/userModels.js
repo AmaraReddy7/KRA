@@ -36,6 +36,7 @@ const User = [
     timestamps: true,
   },
 ];
+
 module.exports = User;
 
 /*{
