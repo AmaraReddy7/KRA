@@ -6,11 +6,11 @@ import {
   Patch,
   Param,
   Delete,
+  Req,
 } from '@nestjs/common';
 import { RegistrationService } from './registration.service';
-import { CreateRegistrationDto } from './dto/create-registration.dto';
-import { UpdateRegistrationDto } from './dto/update-registration.dto';
 
+import { CreateRegistrationDto, UpdateRegistrationDto } from './dto';
 @Controller('registration')
 export class RegistrationController {
   constructor(private readonly registrationService: RegistrationService) {}
@@ -28,13 +28,9 @@ export class RegistrationController {
   }
 
   @Get()
-  async findAll() {
-    try {
-      const registrationalldata = this.registrationService.findAll();
-      return registrationalldata;
-    } catch (error) {
-      console.error('error while fetching registrationdata:', error);
-    }
+  findAll(@Req() req) {
+    console.log(req.user); // { userId, email, role }
+    return this.registrationService.findAll();
   }
 
   @Get(':id')
@@ -42,22 +38,6 @@ export class RegistrationController {
     try {
       const person = this.registrationService.findOne(+id);
       return person;
-    } catch (error) {
-      console.error('error while fetching registrationdata:', error);
-    }
-  }
-
-  @Patch(':id')
-  async update(
-    @Param('id') id: string,
-    @Body() updateRegistrationDto: UpdateRegistrationDto,
-  ) {
-    try {
-      const updateuser = this.registrationService.update(
-        +id,
-        updateRegistrationDto,
-      );
-      return updateuser;
     } catch (error) {
       console.error('error while fetching registrationdata:', error);
     }

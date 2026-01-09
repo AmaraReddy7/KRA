@@ -1,24 +1,29 @@
-import { Column, Entity, PrimaryGeneratedColumn, Unique } from 'typeorm';
-import { BeforeInsert } from 'typeorm/browser';
-import * as bcrypt from 'bcrypt';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 export enum Role {
   Patient = 'patient',
   Doctor = 'doctor',
-  Receiptonist = 'receptionist',
+  Receptionist = 'receptionist',
 }
 
 @Entity()
 export class Registration {
   @PrimaryGeneratedColumn('uuid')
-  id: number;
+  id: string;
+
   @Column()
   name: string;
-  @Column(Unique)
+
+  @Column({ unique: true })
   email: string;
-  @Column() // {select : false}
+
+  @Column()
   password: string;
 
-  @Column({ type: 'enum', enum: Role }) // default: Role.Patient
+  @Column({
+    type: 'enum',
+    enum: Role,
+    default: Role.Patient,
+  })
   role: Role;
 }

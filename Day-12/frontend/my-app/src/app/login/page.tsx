@@ -1,16 +1,17 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
-interface RegisterForm {
-  name: string;
+interface LoginForm {
   email: string;
   password: string;
 }
 
-export default function RegisterPage() {
-  const [form, setForm] = useState<RegisterForm>({
-    name: "",
+export default function LoginPage() {
+  const router = useRouter();
+
+  const [form, setForm] = useState<LoginForm>({
     email: "",
     password: "",
   });
@@ -30,7 +31,7 @@ export default function RegisterPage() {
     setMessage("");
 
     try {
-      const res = await fetch("http://localhost:3000/registration", {
+      const res = await fetch("http://localhost:3000/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -38,23 +39,26 @@ export default function RegisterPage() {
         body: JSON.stringify(form),
       });
 
-      const data: { message?: string } = await res.json();
+      const data: { access_token?: string; message?: string } =
+        await res.json();
 
-      if (!res.ok) {
-        throw new Error(data.message || "Registration failed");
+      if (!res.ok || !data.access_token) {
+        throw new Error(data.message || "Login failed");
       }
 
-      setMessage("✅ Registration successful!");
-      setForm({
-        name: "",
-        email: "",
-        password: "",
-      });
+      // ✅ Store JWT token
+      localStorage.setItem("token", data.access_token);
+
+      setMessage("✅ Login successful!");
+
+      setTimeout(() => {
+        router.push("/dashboard");
+      }, 1000);
     } catch (error: unknown) {
       if (error instanceof Error) {
         setMessage(`❌ ${error.message}`);
       } else {
-        setMessage("❌ Registration failed");
+        setMessage("❌ Login failed");
       }
     } finally {
       setLoading(false);
@@ -64,16 +68,7 @@ export default function RegisterPage() {
   return (
     <div style={styles.container}>
       <form onSubmit={handleSubmit} style={styles.form}>
-        <h2>Register</h2>
-
-        <input
-          type="text"
-          name="name"
-          placeholder="Name"
-          value={form.name}
-          onChange={handleChange}
-          required
-        />
+        <h2>Login</h2>
 
         <input
           type="email"
@@ -94,7 +89,7 @@ export default function RegisterPage() {
         />
 
         <button type="submit" disabled={loading}>
-          {loading ? "Registering..." : "Register"}
+          {loading ? "Logging in..." : "Login"}
         </button>
 
         {message && <p>{message}</p>}

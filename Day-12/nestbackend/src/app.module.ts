@@ -6,6 +6,7 @@ import { RegistrationModule } from './registration/registration.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { join } from 'path';
+import { AuthModule } from './registration/auth/auth.module';
 
 @Module({
   imports: [
@@ -13,7 +14,7 @@ import { join } from 'path';
 
     UsersModule,
     RegistrationModule,
-
+    AuthModule,
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],

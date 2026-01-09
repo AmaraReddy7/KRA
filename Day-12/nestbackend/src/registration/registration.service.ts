@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { CreateRegistrationDto } from './dto/create-registration.dto';
-import { UpdateRegistrationDto } from './dto/update-registration.dto';
+
 import { InjectRepository } from '@nestjs/typeorm';
 import { Registration, Role } from './entities/registration.entity';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
+import { CreateRegistrationDto } from './dto';
 
 @Injectable()
 export class RegistrationService {
@@ -42,8 +42,12 @@ export class RegistrationService {
     return `This action returns a #${id} registration`;
   }
 
-  update(id: number, updateRegistrationDto: UpdateRegistrationDto) {
-    return `This action updates a #${id} registration`;
+  findByEmail(email: string): Promise<Registration | null> {
+    const safeEmail = Array.isArray(email) ? email[0] : email;
+
+    return this.registrationRepository.findOneBy({
+      email: safeEmail,
+    });
   }
 
   remove(id: number) {

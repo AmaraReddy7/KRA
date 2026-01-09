@@ -9,4 +9,5 @@ export class CreateRegistrationDto {
   @IsString()
   @MinLength(6)
   password: string;
+  
 }
