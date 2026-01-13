@@ -8,7 +8,7 @@ import { TransformInterceptor } from './auth.transforminterceptor';
 import { ErrorInterceptor } from './auth.errorsinterceptors';
 import { LoggingInterceptor } from './auth.logginginterceptor';
 import { CacheInterceptor } from './auth.cacheinterceptor';
-import { APP_INTERCEPTOR } from '@nestjs/core';
+import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 
 @Module({
   imports: [
@@ -22,7 +22,11 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
   controllers: [AuthController],
   providers: [
     AuthService,
-    AuthGuard,
+    //  AuthGuard,
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuard,
+    },
     {
       provide: APP_INTERCEPTOR,
       useClass: LoggingInterceptor,
@@ -35,10 +39,10 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
       provide: APP_INTERCEPTOR,
       useClass: ErrorInterceptor,
     },
-    {
-      provide: APP_INTERCEPTOR,
-      useClass: CacheInterceptor,
-    },
+    // {
+    //   provide: APP_INTERCEPTOR,
+    //   useClass: CacheInterceptor,
+    // },
   ],
   exports: [AuthGuard],
 })

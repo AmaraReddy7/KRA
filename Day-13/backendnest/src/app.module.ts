@@ -28,7 +28,7 @@ import { AuthGuard } from './registration/auth/auth.guard';
         password: configService.get<string>('DB_PASSWORD'),
         database: configService.get<string>('DB_NAME'),
 
-        entities: [join(__dirname, '**/*.entity{.ts,.js}')],
+        entities: [join(__dirname, '/**/*.entity{.ts,.js}')],
 
         synchronize: true,
       }),
